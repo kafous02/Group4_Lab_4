@@ -40,26 +40,32 @@ RESET:	;Initialize the ATMega328P chip for the THIS embedded application.
 		out	DDRB,r16
 ;initialize and start Timer A, compare match, interrupt enabled
 		ldi	r16,0xC0			;set OC to compare match set output to high level
-		sts TCCR1A,r16			;Set OC1A on compare match
-		ldi r16,0x04			;set clock prescaler
-		sts TCCR1B,r16			;Sets prescaler to 1024
+		sts TCCR1A,r16			;Sets bits 7 and 6 in TCCR1A. "Set OC1A (PB1) on compare match"
+		ldi r16,0x04			;set clock prescaler, 0x04 = 00000100
+		sts TCCR1B,r16			;Sets bit 2 of TCCR1B, sets prescaler "(clk_I/O)/256"
 		ldi r16,0x80			;force output compare, set PB1 high
-		sts TCCR1C,r16			;Forces output compare for channel A
-		ldi r16,0x40			;Loads 0x40 into r16
-		sts TCCR1A,r16			;Sets toggle of OC1A on compare match
-		ldi	r18,0x0B			;loads 0x0B into r18
-		ldi r17,0xB8			;Loads 0xB8 into r17
-		lds r16,TCNT1L			;Loads the lower half of the timer value into r16
-		add r17,r16				;Adds lower half of timer value and 0xB8, making the smallest possible time value 184
-		lds r16,TCNT1H			;Loads the upper half of the timer value into r16
-		adc r18,r16				;Adds with carry the upper value of the timer and 0x0B, which makes smallest possible value 11. The carry accounts for the potential of overflow when adding the lower half of the timer value
-		sts OCR1AH,r18			;Stores upper value of timer plus r18 into the high part of the output compare register. This value will be continously compared to TCNT1H
-		sts OCR1AL,r17			;Stores lower value of timer plus r17 into the low part of the output compare register. This value will be continously compared to TCNT1L
-		ldi r19,0				;Zeroes the r19 register
-		ldi r16,0x02			;Loads 0x02 into r16
-		sts TIMSK1,r16			;Sets I flag in SREG and enables compare interrupts
-		out TIFR1,r16			;Clears Timer/Counter 1, Output Compare A Match flag
-		sei						;Sets global interrupt flag, effectively enabling interrupts in general
+		sts TCCR1C,r16			;Set bit 7 of TCCR1C, Force Output Compare for Channel A
+								;Only active when WGM1[3:0] specifies non-PWM mode
+								;Since COM1A bits are both set to 1, the effect of the forced compare sets PB1 if there is a match
+		ldi r16,0x89			;r16 = 10001001 in 8-bit binary
+		sts TCCR1A,r16			;Sets bit 7 in TCCR1A, "Clear OC1A on compare match(PB1 output set to low on match)", sets WGM to mode 9 PWM, Phase and Frequency Correct
+		ldi	r18,0x0B			;r18 = 00001011
+		ldi r17,0xE8			;r17 = 10111000, 0x0BB8 = 3000 in decimal
+		lds r16,TCNT1L			;Load current Timer/Counter 1 low byte value into r16
+		add r17,r16				;Low byte of 0x0BB8 added to low byte of Timer/Counter 1
+		lds r16,TCNT1H			;Load current Timer/Counter 1 high byte value into r16
+		adc r18,r16				;High byte of 0x0BB8 added to high byte of Timer/Counter 1
+		sts OCR1AH,r18			;High byte result stored in OCR1AH.
+		sts OCR1AL,r17			;Low byte result stored in OCR1AL.
+								;The output compare register 1 A (OCR1A) has a value that is essentially decimal 3000 greater than the current TCNT1 value
+								;When TCNT1 value matches this value, OC1A (PB1 output) is set to low
+		ldi r19,0				;r19 is set to 0
+		ldi r16,0x02			;r16 = 00000010
+		sts TIMSK1,r16			;TIMSK1 bit 1 set: Timer/Counter 1 Output Compare A Match Interrupt Enable
+		out TIFR1,r16			;Clears OCF1A flag by writing logic one to its bit location. 
+								;Automatically cleared when Output Compare Match A interrupt vector is executed
+								;This flag is set when counter value TCNT1 matches Output Compare Register A OCR1A
+		sei						;Sets global interrupt flag. Enables Timer/Counter 1 Output Compare A Match interrupt
 here:	rjmp here
 		
 INT0_H:
@@ -93,22 +99,36 @@ TIM1_CAPT:
 		nop			;TC 1 capture event handler
 		reti
 TIM1_COMPA:			;TC 1 compare match A handler
-		sbrc	r19,0				;Skips next instruction if bit 0 in r19 is cleared
-		rjmp	ONE					;Jumps to ONE label if bit 0 in r19 is set
-		ldi		r17,0x1E			;Loads 0xE8 into r17
-		ldi		r18,0x01			;Loads 0x0B into r18
-		ldi		r19,1				;Loads 0x01 into r19 to rjmp to ONE
-		rjmp	BEGIN				;Jumps to the BEGIN label	
-ONE:	ldi		r17,0x1E			;Loads 0xE8 into r17
-		ldi		r18,0x01			;Loads 0x0B into r18
-		ldi		r19,0				;Loads 0x0 into r19, will skip this operation for next iteration
-BEGIN:	lds		r16,OCR1AL			;Loads low part of value timer will be compared to into r16
-		add		r17,r16				;Adds 0xE8 and the low value in output compare registers, changes point at which interrupt will be generated
-		lds		r16,OCR1AH			;Loads high part of value timer will be compared to into r16
-		adc		r18,r16				;Adds 0x0B and the high value in output compare registers, changes point at which interrupt will be generated
-		sts		OCR1AH,r18			;Stores high part of new compare value into output compare register high
-		sts		OCR1AL,r17			;Stores low part of new compare value into output compare register low
-		reti						;Returns from interrupt to the top most program counter on the stack
+		sbrc	r19,0				;If r19 is 0, which it should be the first time this interrupt vector is called, the next instruction is skipped.
+		rjmp	ONE					;Skips the next four lines by jumping to label "ONE"
+		ldi		r17,0x01			;student comment here
+		ldi		r18,0x05			;student comment here
+		rjmp	BEGIN				;student comment here	
+ONE:	ldi		r17,0xFF			;student comment here
+		ldi		r18,0xFA			;student comment here
+		lds		r16,OCR1AL			;Current value of OCR1A low byte loaded into r16
+		add		r17,r16				;Adds new value to OCR1A low byte
+		lds		r16,OCR1AH			;Current value of OCR1A high byte loaded into r16
+		adc		r18,r16				;Adds new value to OCR1A high byte, including carry
+		sts		OCR1AH,r18			;New value for OCR1A
+		sts		OCR1AL,r17			;New value for OCR1A
+		ldi		r20,0x00
+		cp		r17,r20
+		brne	RET2
+		ldi		r19,0
+RET2:	reti						;return from interrupt vector, address specified by stack pointer
+BEGIN:	lds		r16,OCR1AL			;Current value of OCR1A low byte loaded into r16
+		add		r17,r16				;Adds new value to OCR1A low byte
+		lds		r16,OCR1AH			;Current value of OCR1A high byte loaded into r16
+		adc		r18,r16				;Adds new value to OCR1A high byte, including carry
+		sts		OCR1AH,r18			;New value for OCR1A
+		sts		OCR1AL,r17			;New value for OCR1A
+		ldi		r20,0xFF
+		cp		r17,r20
+		brne	RET1
+		ldi		r19,1
+RET1:	reti						;return from interrupt vector, address specified by stack pointer
+
 TIM1_COMPB:
 		nop			;TC 1 compare match B handler
 		reti
