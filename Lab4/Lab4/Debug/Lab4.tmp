@@ -1,19 +1,19 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.7</VERSION>
  <DEVICE>"ATmega328PB"</DEVICE>
- <WORKING_DIR>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\Debug</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.132\avrasm\inc</DIR>
   <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc</DIR>
   <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328PBdef.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\Debug\Lab4.obj</FILE>
+  <FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\Debug\Lab4.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>Lab4.hex</FILE>
@@ -23,36 +23,45 @@
   <FILE>Lab4.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <RESET><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>36</LINE></RESET>
-  <INT0_H><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>71</LINE></INT0_H>
-  <INT1_H><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>74</LINE></INT1_H>
-  <PCINT0_H><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>77</LINE></PCINT0_H>
-  <PCINT1_H><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>80</LINE></PCINT1_H>
-  <PCINT2_H><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>83</LINE></PCINT2_H>
-  <WDT><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>86</LINE></WDT>
-  <TIM2_COMPA><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>89</LINE></TIM2_COMPA>
-  <TIM2_COMPB><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>92</LINE></TIM2_COMPB>
-  <TIM2_OVF><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>95</LINE></TIM2_OVF>
-  <TIM1_CAPT><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>98</LINE></TIM1_CAPT>
-  <TIM1_COMPA><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>101</LINE></TIM1_COMPA>
-  <TIM1_COMPB><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>132</LINE></TIM1_COMPB>
-  <TIM1_OVF><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>135</LINE></TIM1_OVF>
-  <TIM0_COMPA><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>138</LINE></TIM0_COMPA>
-  <TIM0_COMPB><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>141</LINE></TIM0_COMPB>
-  <TIM0_OVF><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>144</LINE></TIM0_OVF>
-  <SPI_TC><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>147</LINE></SPI_TC>
-  <USART_RXC><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>150</LINE></USART_RXC>
-  <USART_UDRE><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>153</LINE></USART_UDRE>
-  <USART_TXC><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>156</LINE></USART_TXC>
-  <ADCC><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>159</LINE></ADCC>
-  <EE_READY><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>162</LINE></EE_READY>
-  <ANA_COMP><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>165</LINE></ANA_COMP>
-  <TWI><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>168</LINE></TWI>
-  <SPM_READY><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>171</LINE></SPM_READY>
-  <here><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>69</LINE></here>
-  <ONE><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>107</LINE></ONE>
-  <BEGIN><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>120</LINE></BEGIN>
-  <RET2><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>119</LINE></RET2>
-  <RET1><FILE>C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm</FILE><LINE>130</LINE></RET1>
+  <Init><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>9</LINE></Init>
+  <Loop><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>31</LINE></Loop>
+  <ADC_Get><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>242</LINE></ADC_Get>
+  <lvl1><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>92</LINE></lvl1>
+  <lvl2><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>98</LINE></lvl2>
+  <lvl3a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>104</LINE></lvl3a>
+  <lvl4a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>106</LINE></lvl4a>
+  <lvl5a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>108</LINE></lvl5a>
+  <lvl6a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>110</LINE></lvl6a>
+  <lvl7a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>112</LINE></lvl7a>
+  <lvl8a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>114</LINE></lvl8a>
+  <lvl9a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>116</LINE></lvl9a>
+  <lvl10a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>118</LINE></lvl10a>
+  <lvl11a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>120</LINE></lvl11a>
+  <lvl12a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>122</LINE></lvl12a>
+  <lvl13a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>124</LINE></lvl13a>
+  <lvl14a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>126</LINE></lvl14a>
+  <lvl15a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>128</LINE></lvl15a>
+  <lvl16a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>130</LINE></lvl16a>
+  <lvl17a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>132</LINE></lvl17a>
+  <lvl18a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>134</LINE></lvl18a>
+  <lvl19a><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>136</LINE></lvl19a>
+  <lvl3b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>138</LINE></lvl3b>
+  <lvl4b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>144</LINE></lvl4b>
+  <lvl5b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>150</LINE></lvl5b>
+  <lvl6b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>156</LINE></lvl6b>
+  <lvl7b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>162</LINE></lvl7b>
+  <lvl8b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>168</LINE></lvl8b>
+  <lvl9b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>174</LINE></lvl9b>
+  <lvl10b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>180</LINE></lvl10b>
+  <lvl11b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>186</LINE></lvl11b>
+  <lvl12b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>192</LINE></lvl12b>
+  <lvl13b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>198</LINE></lvl13b>
+  <lvl14b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>204</LINE></lvl14b>
+  <lvl15b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>210</LINE></lvl15b>
+  <lvl16b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>216</LINE></lvl16b>
+  <lvl17b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>222</LINE></lvl17b>
+  <lvl18b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>228</LINE></lvl18b>
+  <lvl19b><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>234</LINE></lvl19b>
+  <A2V1><FILE>C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm</FILE><LINE>245</LINE></A2V1>
  </LABELS>
 </ASSEMBLER_INFO>

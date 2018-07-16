@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.7  C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4\Lab4\main.asm Sun Jul 08 12:27:55 2018
+AVRASM ver. 2.2.7  C:\Users\Kevin Fou\git\Group4_Lab_4\Lab4\Lab4\main.asm Mon Jul 16 19:40:29 2018
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328PBdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.150\avrasm\inc\m328PBdef.inc'
@@ -1543,177 +1543,250 @@ AVRASM ver. 2.2.7  C:\Users\adama\Desktop\CECS 412 - Embedded Systems\Lab 4\Lab4
                                  
                                   ;
                                   ; Created: 3/24/2018 4:15:16 AM
-                                  ; Author : Eugene Rockey
+                                  ; Author : Eugene Rockey			
                                  
-                                 		 .org 0					;student discuss interrupts and vector table in report
-000000 940c 0034                 		 jmp RESET				;student discuss reset in report
-000002 940c 0056                 		 jmp INT0_H				;student discuss reset in report
-000004 940c 0058                 		 jmp INT1_H				;student discuss reset in report
-000006 940c 005a                 		 jmp PCINT0_H			;student discuss reset in report
-000008 940c 005c                 		 jmp PCINT1_H			;student discuss reset in report
-00000a 940c 005e                 		 jmp PCINT2_H			;student discuss reset in report
-00000c 940c 0060                 		 jmp WDT				;student discuss reset in report
-00000e 940c 0062                 		 jmp TIM2_COMPA			;student discuss reset in report
-000010 940c 0064                 		 jmp TIM2_COMPB			;student discuss reset in report
-000012 940c 0066                 		 jmp TIM2_OVF			;student discuss reset in report
-000014 940c 0068                 		 jmp TIM1_CAPT			;student discuss reset in report
-000016 940c 006a                 		 jmp TIM1_COMPA			;student discuss reset in report
-000018 940c 008f                 		 jmp TIM1_COMPB			;student discuss reset in report
-00001a 940c 0091                 		 jmp TIM1_OVF			;student discuss reset in report
-00001c 940c 0093                 		 jmp TIM0_COMPA			;student discuss reset in report
-00001e 940c 0095                 		 jmp TIM0_COMPB			;student discuss reset in report
-000020 940c 0097                 		 jmp TIM0_OVF			;student discuss reset in report
-000022 940c 0099                 		 jmp SPI_TC				;student discuss reset in report
-000024 940c 009b                 		 jmp USART_RXC			;student discuss reset in report
-000026 940c 009d                 		 jmp USART_UDRE			;student discuss reset in report
-000028 940c 009f                 		 jmp USART_TXC			;student discuss reset in report
-00002a 940c 00a1                 		 jmp ADCC				;student discuss reset in report
-00002c 940c 00a3                 		 jmp EE_READY			;student discuss reset in report
-00002e 940c 00a5                 		 jmp ANA_COMP			;student discuss reset in report
-000030 940c 00a7                 		 jmp TWI				;student discuss reset in report
-000032 940c 00a9                 		 jmp SPM_READY			;student discuss reset in report
+                                 		.org	0			;start interrupt table at 0x0
+000000 940c 0002                 		jmp		Init		;include RESET interrupt at 0x0	
                                  
+000002 94f8                      Init:	cli					;clear interrupts
+000003 e807                      		ldi		r16,0x87    ;loads 0x87 into r16
+000004 9300 007a                 		sts		ADCSRA,r16	;stores r16 into ADCSRA, enabling ADC, 128 division factor 
+000006 e400                      		ldi		r16,0x40    ;loads 0x40 into r16
+000007 9300 007c                 		sts		ADMUX,r16   ;stores r16 into ADMUX, voltage reference of AVcc with external capacitor at AREF pin
+000009 e000                      		ldi		r16,0		;loads 0x00 into r16  
+00000a 9300 007b                 		sts		ADCSRB,r16	;stores r16 into ADCSRB, enables free running mode
+00000c e002                      		ldi		r16,0x02	;load 0x02 into register r16
+00000d b904                      		out		DDRB,r16	;set port DDRB to 0x02, allowing output to LCD
+00000e ec02                      		ldi		r16,0xC2	;load 0xC2 into register r16
+00000f 9300 0080                 		sts		TCCR1A,r16	;sets TC1 Control Register A to 0xC2 [Set OC1A/OC1B on Compare Match, mode 14 - Fast PWM]       
+000011 e10b                      		ldi		r16,0x1B	;load 0x1B into register r16
+000012 9300 0081                 		sts		TCCR1B,r16	;sets TC1 Control Register B to 0x1B [Set clock prescaler to clk(I/O)/64, mode 14 - Fast PWM]       
+000014 e008                      		ldi		r16,0x08	;loads 0x08 into r16
+000015 e213                      		ldi		r17,0x23	;loads 0x23 into r17
+000016 9300 0087                 		sts		ICR1H,r16	;stores r16 into ICR1H
+000018 9310 0086                 		sts		ICR1L,r17	;stores r17 into ICR1L, setting max duty cycle to 2083. (16,000,000 Hz CPU / (120 Hz desired * 64 prescalar))
+00001a e000                      		ldi		r16,0x00	;loads 0x00 into r16
+00001b e513                      		ldi		r17,0x53	;loads 0x23 into r17
+00001c 9300 0089                 		sts		OCR1AH,r16	;stores r16 into OCR1AH
+00001e 9310 0088                 		sts		OCR1AL,r17	;stores r17 into OCR1AL, setting LCD to default at max brightness
                                  
+000020 d0e5                      Loop:	rcall	ADC_Get		;call ADCGet to update ADC values
+000021 ef00                      		ldi		r16,0xF0	;loads decimal 240 into r16
+000022 9120 0078                 		lds		r18,ADCL	;loads the lower ADC nibbles into r18
+000024 9110 0079                 		lds		r17,ADCH	;loads the upper ADC nibbles into r17
+000026 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 240
+000027 f5b4                      		brge	lvl1		;set lcd brightness to duty cycle 1/11 (max brightness) if ADC >= 240
+000028 ee0b                      		ldi		r16,0xEB	;loads decimal 235 into r16
+000029 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 230
+00002a f5d4                      		brge	lvl2		;set lcd brightness to duty cycle 2/11 (high brightness) if ADC >= 230
+00002b ee06                      		ldi		r16,0xE6	;loads decimal 230 into r16
+00002c 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 220
+00002d f5f4                      		brge	lvl3a		;set lcd brightness to duty cycle 3/11 (high brightness) if ADC >= 220
+00002e ee01                      		ldi		r16,0xE1	;loads decimal 225 into r16
+00002f 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 210
+000030 f5ec                      		brge	lvl4a		;set lcd brightness to duty cycle 4/11 (high brightness) if ADC >= 210
+000031 ed0c                      		ldi		r16,0xDC	;loads decimal 220 into r16
+000032 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 200
+000033 f5e4                      		brge	lvl5a		;set lcd brightness to duty cycle 5/11 (medium brightness) if ADC >= 200
+000034 ed07                      		ldi		r16,0xD7	;loads decimal 215 into r16
+000035 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 190
+000036 f5dc                      		brge	lvl6a		;set lcd brightness to duty cycle 6/11 (medium brightness) if ADC >= 190
+000037 ed02                      		ldi		r16,0xD2	;loads decimal 210 into r16
+000038 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 180
+000039 f5d4                      		brge	lvl7a		;set lcd brightness to duty cycle 7/11 (medium brightness) if ADC >= 180
+00003a ec0d                      		ldi		r16,0xCD	;loads decimal 205 into r16
+00003b 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 170
+00003c f5cc                      		brge	lvl8a		;set lcd brightness to duty cycle 8/11 (low brightness) if ADC >= 170
+00003d ec08                      		ldi		r16,0xC8	;loads decimal 200 into r16
+00003e 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 160
+00003f f5c4                      		brge	lvl9a		;set lcd brightness to duty cycle 9/11 (low brightness) if ADC >= 160
+000040 ec03                      		ldi		r16,0xC3	;loads decimal 195 into r16
+000041 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+000042 f5bc                      		brge	lvl10a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+000043 eb0e                      		ldi		r16,0xBE	;loads decimal 190 into r16
+000044 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+000045 f5b4                      		brge	lvl11a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+000046 eb09                      		ldi		r16,0xB9	;loads decimal 185 into r16
+000047 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+000048 f5ac                      		brge	lvl12a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+000049 eb04                      		ldi		r16,0xB4	;loads decimal 180 into r16
+00004a 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+00004b f5a4                      		brge	lvl13a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+00004c ea0f                      		ldi		r16,0xAF	;loads decimal 175 into r16
+00004d 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+00004e f59c                      		brge	lvl14a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+00004f ea0a                      		ldi		r16,0xAA	;loads decimal 170 into r16
+000050 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+000051 f594                      		brge	lvl15a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+000052 ea05                      		ldi		r16,0xA5	;loads decimal 165 into r16
+000053 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+000054 f58c                      		brge	lvl16a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+000055 ea00                      		ldi		r16,0xA0	;loads decimal 160 into r16
+000056 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+000057 f584                      		brge	lvl17a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+000058 e90b                      		ldi		r16,0x9B	;loads decimal 155 into r16
+000059 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+00005a f57c                      		brge	lvl18a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
+00005b e906                      		ldi		r16,0x96	;loads decimal 150 into r16
+00005c 1720                      		cp		r18,r16		;compares the lower ADC nibbles to decimal 150
+00005d f574                      		brge	lvl19a		;set lcd brightness to duty cycle 10/11 (low brightness) if ADC > 150
                                  
-                                 RESET:	;Initialize the ATMega328P chip for the THIS embedded application.
-                                 		;initialize PORTB for Output
-000034 94f8                      		cli
-000035 ef0f                      		ldi	r16,0xFF				;PB1 or OC1A Output
-000036 b904                      		out	DDRB,r16
-                                 ;initialize and start Timer A, compare match, interrupt enabled
-000037 ec00                      		ldi	r16,0xC0			;set OC to compare match set output to high level
-000038 9300 0080                 		sts TCCR1A,r16			;Sets bits 7 and 6 in TCCR1A. "Set OC1A (PB1) on compare match"
-00003a e004                      		ldi r16,0x04			;set clock prescaler, 0x04 = 00000100
-00003b 9300 0081                 		sts TCCR1B,r16			;Sets bit 2 of TCCR1B, sets prescaler "(clk_I/O)/256"
-00003d e800                      		ldi r16,0x80			;force output compare, set PB1 high
-00003e 9300 0082                 		sts TCCR1C,r16			;Set bit 7 of TCCR1C, Force Output Compare for Channel A
-                                 								;Only active when WGM1[3:0] specifies non-PWM mode
-                                 								;Since COM1A bits are both set to 1, the effect of the forced compare sets PB1 if there is a match
-000040 e809                      		ldi r16,0x89			;r16 = 10001001 in 8-bit binary
-000041 9300 0080                 		sts TCCR1A,r16			;Sets bit 7 in TCCR1A, "Clear OC1A on compare match(PB1 output set to low on match)", sets WGM to mode 9 PWM, Phase and Frequency Correct
-000043 e02b                      		ldi	r18,0x0B			;r18 = 00001011
-000044 ee18                      		ldi r17,0xE8			;r17 = 10111000, 0x0BB8 = 3000 in decimal
-000045 9100 0084                 		lds r16,TCNT1L			;Load current Timer/Counter 1 low byte value into r16
-000047 0f10                      		add r17,r16				;Low byte of 0x0BB8 added to low byte of Timer/Counter 1
-000048 9100 0085                 		lds r16,TCNT1H			;Load current Timer/Counter 1 high byte value into r16
-00004a 1f20                      		adc r18,r16				;High byte of 0x0BB8 added to high byte of Timer/Counter 1
-00004b 9320 0089                 		sts OCR1AH,r18			;High byte result stored in OCR1AH.
-00004d 9310 0088                 		sts OCR1AL,r17			;Low byte result stored in OCR1AL.
-                                 								;The output compare register 1 A (OCR1A) has a value that is essentially decimal 3000 greater than the current TCNT1 value
-                                 								;When TCNT1 value matches this value, OC1A (PB1 output) is set to low
-00004f e030                      		ldi r19,0				;r19 is set to 0
-000050 e002                      		ldi r16,0x02			;r16 = 00000010
-000051 9300 006f                 		sts TIMSK1,r16			;TIMSK1 bit 1 set: Timer/Counter 1 Output Compare A Match Interrupt Enable
-000053 bb06                      		out TIFR1,r16			;Clears OCF1A flag by writing logic one to its bit location. 
-                                 								;Automatically cleared when Output Compare Match A interrupt vector is executed
-                                 								;This flag is set when counter value TCNT1 matches Output Compare Register A OCR1A
-000054 9478                      		sei						;Sets global interrupt flag. Enables Timer/Counter 1 Output Compare A Match interrupt
-000055 cfff                      here:	rjmp here
+00005e e000                      lvl1:	ldi		r16,0x00	;load 0x00 in register r16
+00005f e513                      		ldi		r17,0x53	;load 0x53 in register r17, representing a duty cycle of 0083
+000060 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+000062 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 0083, giving the lcd a max brightness
+000064 cfbb                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+000065 e000                      lvl2:	ldi		r16,0x00	;load 0x01 in register r16
+000066 eb17                      		ldi		r17,0xB7	;load 0x1B in register r17, representing a duty cycle of 0183
+000067 9300 0089                 		sts		OCR1AH,r16	;store 0x01 to SRAM address OCR1AH
+000069 9310 0088                 		sts		OCR1AL,r17	;store 0x1B to SRAM address OCR1AL, setting the duty cycle to 0283, giving the lcd a high brightness
+00006b cfb4                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+00006c 940c 008e                 lvl3a:	jmp	lvl3b
+                                 
+00006e 940c 0095                 lvl4a:	jmp	lvl4b
+                                 
+000070 940c 009c                 lvl5a:	jmp	lvl5b
+                                 
+000072 940c 00a3                 lvl6a:	jmp	lvl6b
+                                 
+000074 940c 00aa                 lvl7a:	jmp	lvl7b
+                                 
+000076 940c 00b1                 lvl8a:	jmp	lvl8b
+                                 
+000078 940c 00b8                 lvl9a:	jmp	lvl9b
+                                 
+00007a 940c 00bf                 lvl10a:	jmp	lvl10b
+                                 
+00007c 940c 00c6                 lvl11a:	jmp	lvl11b
+                                 
+00007e 940c 00cd                 lvl12a:	jmp	lvl12b
+                                 
+000080 940c 00d4                 lvl13a:	jmp	lvl13b
+                                 
+000082 940c 00db                 lvl14a:	jmp	lvl14b
+                                 
+000084 940c 00e2                 lvl15a:	jmp	lvl15b
+                                 
+000086 940c 00e9                 lvl16a:	jmp	lvl16b
+                                 
+000088 940c 00f0                 lvl17a:	jmp	lvl17b
+                                 
+00008a 940c 00f7                 lvl18a:	jmp	lvl18b
+                                 
+00008c 940c 00fe                 lvl19a:	jmp	lvl19b
+                                 
+00008e e001                      lvl3b:	ldi		r16,0x01	;load 0x01 in register r16
+00008f e11b                      		ldi		r17,0x1B	;load 0xE3 in register r17, representing a duty cycle of 0283
+000090 9300 0089                 		sts		OCR1AH,r16	;store 0x01 to SRAM address OCR1AH
+000092 9310 0088                 		sts		OCR1AL,r17	;store 0xE3 to SRAM address OCR1AL, setting the duty cycle to 0483, giving the lcd a high brightness
+000094 cf8b                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+000095 e001                      lvl4b:	ldi		r16,0x01	;load 0x02 in register r16
+000096 e71f                      		ldi		r17,0x7F	;load 0xAB in register r17, representing a duty cycle of 0383
+000097 9300 0089                 		sts		OCR1AH,r16	;store 0x02 to SRAM address OCR1AH
+000099 9310 0088                 		sts		OCR1AL,r17	;store 0xAB to SRAM address OCR1AL, setting the duty cycle to 0683, giving the lcd a high brightness
+00009b cf84                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+00009c e001                      lvl5b:	ldi		r16,0x01	;load 0x03 in register r16
+00009d ee13                      		ldi		r17,0xE3	;load 0x73 in register r17, representing a duty cycle of 0483
+00009e 9300 0089                 		sts		OCR1AH,r16	;store 0x03 to SRAM address OCR1AH
+0000a0 9310 0088                 		sts		OCR1AL,r17	;store 0x73 to SRAM address OCR1AL, setting the duty cycle to 0883, giving the lcd a medium brightness
+0000a2 cf7d                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000a3 e002                      lvl6b:	ldi		r16,0x02	;load 0x04 in register r16
+0000a4 e417                      		ldi		r17,0x47	;load 0x3B in register r17, representing a duty cycle of 0583
+0000a5 9300 0089                 		sts		OCR1AH,r16	;store 0x04 to SRAM address OCR1AH
+0000a7 9310 0088                 		sts		OCR1AL,r17	;store 0x3B to SRAM address OCR1AL, setting the duty cycle to 1083, giving the lcd a medium brightness
+0000a9 cf76                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000aa e002                      lvl7b:	ldi		r16,0x02	;load 0x05 in register r16
+0000ab ea1b                      		ldi		r17,0xAB	;load 0x03 in register r17, representing a duty cycle of 0683
+0000ac 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000ae 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 1283, giving the lcd a medium brightness
+0000b0 cf6f                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000b1 e003                      lvl8b:	ldi		r16,0x03	;load 0x05 in register r16
+0000b2 e01f                      		ldi		r17,0x0F	;load 0xCB in register r17, representing a duty cycle of 0783
+0000b3 9300 0089                 		sts		OCR1AH,r16	;store 0x05 to SRAM address OCR1AH
+0000b5 9310 0088                 		sts		OCR1AL,r17	;store 0xCB to SRAM address OCR1AL, setting the duty cycle to 1483, giving the lcd a low brightness
+0000b7 cf68                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000b8 e003                      lvl9b:	ldi		r16,0x03	;load 0x06 in register r16
+0000b9 e713                      		ldi		r17,0x73	;load 0x93 in register r17, representing a duty cycle of 0883
+0000ba 9300 0089                 		sts		OCR1AH,r16	;store 0x06 to SRAM address OCR1AH
+0000bc 9310 0088                 		sts		OCR1AL,r17	;store 0x93 to SRAM address OCR1AL, setting the duty cycle to 1683, giving the lcd a low brightness
+0000be cf61                      		rjmp	Loop		;jump back to start to get a new adc value
                                  		
-                                 INT0_H:
-000056 0000                      		nop			;external interrupt 0 handler
-000057 9518                      		reti
-                                 INT1_H:
-000058 0000                      		nop			;external interrupt 1 handler
-000059 9518                      		reti
-                                 PCINT0_H:
-00005a 0000                      		nop			;pin change interrupt 0 handler
-00005b 9518                      		reti
-                                 PCINT1_H:
-00005c 0000                      		nop			;pin change interrupt 1 handler
-00005d 9518                      		reti
-                                 PCINT2_H:
-00005e 0000                      		nop			;pin change interrupt 2 handler
-00005f 9518                      		reti
-                                 WDT:
-000060 0000                      		nop			;watch dog time out handler
-000061 9518                      		reti
-                                 TIM2_COMPA:
-000062 0000                      		nop			;TC 2 compare match A handler
-000063 9518                      		reti
-                                 TIM2_COMPB:
-000064 0000                      		nop			;TC 2 compare match B handler
-000065 9518                      		reti
-                                 TIM2_OVF:
-000066 0000                      		nop			;TC 2 overflow handler
-000067 9518                      		reti
-                                 TIM1_CAPT:
-000068 0000                      		nop			;TC 1 capture event handler
-000069 9518                      		reti
-                                 TIM1_COMPA:			;TC 1 compare match A handler
-00006a fd30                      		sbrc	r19,0				;If r19 is 0, which it should be the first time this interrupt vector is called, the next instruction is skipped.
-00006b c003                      		rjmp	ONE					;Skips the next four lines by jumping to label "ONE"
-00006c e011                      		ldi		r17,0x01			;student comment here
-00006d e025                      		ldi		r18,0x05			;student comment here
-00006e c011                      		rjmp	BEGIN				;student comment here	
-00006f ef1f                      ONE:	ldi		r17,0xFF			;student comment here
-000070 ef2a                      		ldi		r18,0xFA			;student comment here
-000071 9100 0088                 		lds		r16,OCR1AL			;Current value of OCR1A low byte loaded into r16
-000073 0f10                      		add		r17,r16				;Adds new value to OCR1A low byte
-000074 9100 0089                 		lds		r16,OCR1AH			;Current value of OCR1A high byte loaded into r16
-000076 1f20                      		adc		r18,r16				;Adds new value to OCR1A high byte, including carry
-000077 9320 0089                 		sts		OCR1AH,r18			;New value for OCR1A
-000079 9310 0088                 		sts		OCR1AL,r17			;New value for OCR1A
-00007b e040                      		ldi		r20,0x00
-00007c 1714                      		cp		r17,r20
-00007d f409                      		brne	RET2
-00007e e030                      		ldi		r19,0
-00007f 9518                      RET2:	reti						;return from interrupt vector, address specified by stack pointer
-000080 9100 0088                 BEGIN:	lds		r16,OCR1AL			;Current value of OCR1A low byte loaded into r16
-000082 0f10                      		add		r17,r16				;Adds new value to OCR1A low byte
-000083 9100 0089                 		lds		r16,OCR1AH			;Current value of OCR1A high byte loaded into r16
-000085 1f20                      		adc		r18,r16				;Adds new value to OCR1A high byte, including carry
-000086 9320 0089                 		sts		OCR1AH,r18			;New value for OCR1A
-000088 9310 0088                 		sts		OCR1AL,r17			;New value for OCR1A
-00008a ef4f                      		ldi		r20,0xFF
-00008b 1714                      		cp		r17,r20
-00008c f409                      		brne	RET1
-00008d e031                      		ldi		r19,1
-00008e 9518                      RET1:	reti						;return from interrupt vector, address specified by stack pointer
+0000bf e003                      lvl10b:	ldi		r16,0x03	;load 0x07 in register r16
+0000c0 ed17                      		ldi		r17,0xD7	;load 0x5B in register r17, representing a duty cycle of 0983
+0000c1 9300 0089                 		sts		OCR1AH,r16	;store 0x07 to SRAM address OCR1AH
+0000c3 9310 0088                 		sts		OCR1AL,r17	;store 0x5B to SRAM address OCR1AL, setting the duty cycle to 1883, giving the lcd a low brightness
+0000c5 cf5a                      		rjmp	Loop		;jump back to start to get a new adc value
                                  
-                                 TIM1_COMPB:
-00008f 0000                      		nop			;TC 1 compare match B handler
-000090 9518                      		reti
-                                 TIM1_OVF:
-000091 0000                      		nop			;TC 1 overflow handler
-000092 9518                      		reti
-                                 TIM0_COMPA:
-000093 0000                      		nop			;TC 0 compare match A handler
-000094 9518                      		reti
-                                 TIM0_COMPB:			
-000095 0000                      		nop			;TC 1 compare match B handler
-000096 9518                      		reti
-                                 TIM0_OVF:
-000097 0000                      		nop			;TC 0 overflow handler
-000098 9518                      		reti
-                                 SPI_TC:
-000099 0000                      		nop			;SPI Transfer Complete
-00009a 9518                      		reti
-                                 USART_RXC:
-00009b 0000                      		nop			;USART receive complete
-00009c 9518                      		reti
-                                 USART_UDRE:
-00009d 0000                      		nop			;USART data register empty
-00009e 9518                      		reti
-                                 USART_TXC:
-00009f 0000                      		nop			;USART transmit complete
-0000a0 9518                      		reti
-                                 ADCC:
-0000a1 0000                      		nop			;ADC conversion complete
-0000a2 9518                      		reti
-                                 EE_READY:
-0000a3 0000                      		nop			;EEPROM ready
-0000a4 9518                      		reti
-                                 ANA_COMP:
-0000a5 0000                      		nop			;Analog Comparison complete 
-0000a6 9518                      		reti
-                                 TWI:
-0000a7 0000                      		nop			;I2C interrupt handler
-0000a8 9518                      		reti
-                                 SPM_READY:
-0000a9 0000                      		nop			;store program memory ready handler
-0000aa 9518                      		reti		
+0000c6 e004                      lvl11b:	ldi		r16,0x04	;load 0x08 in register r16
+0000c7 e31b                      		ldi		r17,0x3B	;load 0x23 in register r17, representing a duty cycle of 1083
+0000c8 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000ca 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000cc cf53                      		rjmp	Loop		;jump back to start to get a new adc value
                                  
+0000cd e004                      lvl12b:	ldi		r16,0x04	;load 0x08 in register r16
+0000ce e91f                      		ldi		r17,0x9F	;load 0x23 in register r17, representing a duty cycle of 1183
+0000cf 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000d1 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000d3 cf4c                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000d4 e005                      lvl13b:	ldi		r16,0x05	;load 0x08 in register r16
+0000d5 e013                      		ldi		r17,0x03	;load 0x23 in register r17, representing a duty cycle of 1283
+0000d6 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000d8 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000da cf45                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000db e005                      lvl14b:	ldi		r16,0x05	;load 0x08 in register r16
+0000dc e617                      		ldi		r17,0x67	;load 0x23 in register r17, representing a duty cycle of 1383
+0000dd 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000df 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000e1 cf3e                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000e2 e005                      lvl15b:	ldi		r16,0x05	;load 0x08 in register r16
+0000e3 ec1b                      		ldi		r17,0xCB	;load 0x23 in register r17, representing a duty cycle of 1483
+0000e4 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000e6 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000e8 cf37                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000e9 e006                      lvl16b:	ldi		r16,0x06	;load 0x08 in register r16
+0000ea e21f                      		ldi		r17,0x2F	;load 0x23 in register r17, representing a duty cycle of 1583
+0000eb 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000ed 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000ef cf30                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000f0 e006                      lvl17b:	ldi		r16,0x06	;load 0x08 in register r16
+0000f1 e913                      		ldi		r17,0x93	;load 0x23 in register r17, representing a duty cycle of 1683
+0000f2 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000f4 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000f6 cf29                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000f7 e007                      lvl18b:	ldi		r16,0x07	;load 0x08 in register r16
+0000f8 e51b                      		ldi		r17,0x5B	;load 0x23 in register r17, representing a duty cycle of 1883
+0000f9 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+0000fb 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+0000fd cf22                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 
+0000fe e008                      lvl19b:	ldi		r16,0x08	;load 0x08 in register r16
+0000ff e213                      		ldi		r17,0x23	;load 0x23 in register r17, representing a duty cycle of 2083
+000100 9300 0089                 		sts		OCR1AH,r16	;store 0x00 to SRAM address OCR1AH
+000102 9310 0088                 		sts		OCR1AL,r17	;store 0x53 to SRAM address OCR1AL, setting the duty cycle to 2083, giving the lcd a min brightness
+000104 cf1b                      		rjmp	Loop		;jump back to start to get a new adc value
+                                 		
+000105 9478                      		sei					;set enable interrupts
+                                 
+                                 ADC_Get:
+000106 ec07                      		ldi     r16,0xC7	;load 1100 0111 to r16
+000107 9300 007a                 		sts     ADCSRA,r16  ;store r16 to SRAM address ADCSRA to enable ADC & start ADC conversion, 128 division factor
+000109 9100 007a                 A2V1:   lds     r16,ADCSRA  ;load from SRAM address ADCSRA into r16
+00010b fd06                              sbrc    r16,ADSC    ;skip if bit 6 in r16 cleared, meaning ADC complete
+00010c cffc                              rjmp    A2V1        ;jump again to see if ADC conversion is complete
 
 
 RESOURCE USE INFORMATION
@@ -1733,37 +1806,37 @@ counted separately from r26..r31 here.
 "ATmega328PB" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  25 r17:  11 r18:   9 r19:   4 r20:   4 
+r13:   0 r14:   0 r15:   0 r16:  96 r17:  43 r18:  20 r19:   0 r20:   0 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
-Registers used: 5 out of 35 (14.3%)
+Registers used: 3 out of 35 (8.6%)
 
 "ATmega328PB" instruction use summary:
-.lds  :   0 .sts  :   0 adc   :   3 add   :   3 adiw  :   0 and   :   0 
+.lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brcc  :   0 brcs  :   0 break :   0 breq  :   0 brge  :  19 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   2 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   1 cln   :   0 clr   :   0 cls   :   0 
-clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   2 cpc   :   0 
+clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :  19 cpc   :   0 
 cpi   :   0 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :  26 
-ld    :   0 ldd   :   0 ldi   :  17 lds   :   6 lpm   :   0 lsl   :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 jmp   :  18 
+ld    :   0 ldd   :   0 ldi   :  68 lds   :   3 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :  24 or    :   0 ori   :   0 out   :   2 pop   :   0 
-push  :   0 rcall :   0 ret   :   0 reti  :  26 rjmp  :   3 rol   :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :   1 pop   :   0 
+push  :   0 rcall :   1 ret   :   1 reti  :   0 rjmp  :  20 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   1 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
-sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :  11 
+sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :  48 
 sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 15 out of 113 (13.3%)
+Instructions used: 13 out of 113 (11.5%)
 
 "ATmega328PB" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000156    342      0    342   32768   1.0%
+[.cseg] 0x000000 0x00021c    540      0    540   32768   1.6%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
