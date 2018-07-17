@@ -33,210 +33,202 @@ Loop:	rcall	ADC_Get
 		lds		r18,ADCL	
 		lds		r17,ADCH	
 		cp		r18,r16		
-		brge	lvl1		
+		brge	brit1boost		
 		ldi		r16,0xEB	
 		cp		r18,r16		
-		brge	lvl2		
+		brge	brit2boost		
 		ldi		r16,0xE6	
 		cp		r18,r16		
-		brge	lvl3a		
+		brge	brit3boost		
 		ldi		r16,0xE1	
 		cp		r18,r16		
-		brge	lvl4a		
+		brge	brit4boost		
 		ldi		r16,0xDC	
 		cp		r18,r16		
-		brge	lvl5a		
+		brge	brit5boost		
 		ldi		r16,0xD7	
 		cp		r18,r16		
-		brge	lvl6a		
+		brge	brit6boost		
 		ldi		r16,0xD2	
 		cp		r18,r16		
-		brge	lvl7a		
+		brge	brit7boost		
 		ldi		r16,0xCD	
 		cp		r18,r16		
-		brge	lvl8a		
+		brge	brit8boost		
 		ldi		r16,0xC8	
 		cp		r18,r16		
-		brge	lvl9a		
+		brge	brit9boost		
 		ldi		r16,0xC3	
 		cp		r18,r16		
-		brge	lvl10a		
+		brge	brit10boost		
 		ldi		r16,0xBE	
 		cp		r18,r16		
-		brge	lvl11a		
+		brge	brit11boost		
 		ldi		r16,0xB9	
 		cp		r18,r16		
-		brge	lvl12a		
+		brge	brit12boost		
 		ldi		r16,0xB4	
 		cp		r18,r16		
-		brge	lvl13a		
+		brge	brit13boost		
 		ldi		r16,0xAF	
 		cp		r18,r16		
-		brge	lvl14a		
+		brge	brit14boost		
 		ldi		r16,0xAA	
 		cp		r18,r16		
-		brge	lvl15a		
+		brge	brit15boost		
 		ldi		r16,0xA5	
 		cp		r18,r16		
-		brge	lvl16a		
+		brge	brit16boost		
 		ldi		r16,0xA0	
 		cp		r18,r16		
-		brge	lvl17a		
+		brge	brit17boost		
 		ldi		r16,0x9B	
 		cp		r18,r16		
-		brge	lvl18a		
+		brge	brit18boost		
 		ldi		r16,0x96	
 		cp		r18,r16		
-		brge	lvl19a		
+		brge	brit19boost	
+		
+//Booster branches due to lacking range of conditional branching
+brit1boost:		rjmp	brit1
+brit2boost:		rjmp	brit2
+brit3boost:		rjmp	brit3
+brit4boost:		rjmp	brit4
+brit5boost:		rjmp	brit5
+brit6boost:		rjmp	brit6
+brit7boost:		rjmp	brit7
+brit8boost:		rjmp	brit8
+brit9boost:		rjmp	brit9
+brit10boost:	rjmp	brit10
+brit11boost:	rjmp	brit11
+brit12boost:	rjmp	brit12
+brit13boost:	rjmp	brit13
+brit14boost:	rjmp	brit14
+brit15boost:	rjmp	brit15
+brit16boost:	rjmp	brit16
+brit17boost:	rjmp	brit17
+brit18boost:	rjmp	brit18
+brit19boost:	rjmp	brit19
 
-lvl1:	ldi		r16,0x00	
-		ldi		r17,0x53	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
+brit1:
+		ldi		r16,0x00
+		ldi		r17,0x53
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl2:	ldi		r16,0x00	
-		ldi		r17,0xB7	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
+brit2:
+		ldi		r16,0x00
+		ldi		r17,0xB7
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl3a:	jmp	lvl3b
+brit3:	
+		ldi		r16,0x01
+		ldi		r17,0x1B
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl4a:	jmp	lvl4b
+brit4:
+		ldi		r16,0x01
+		ldi		r17,0x7F
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl5a:	jmp	lvl5b
+brit5:
+		ldi		r16,0x01
+		ldi		r17,0xE3
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl6a:	jmp	lvl6b
+brit6:
+		ldi		r16,0x02
+		ldi		r17,0x47
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl7a:	jmp	lvl7b
+brit7:
+		ldi		r16,0x02
+		ldi		r17,0xAB
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl8a:	jmp	lvl8b
+brit8:	
+		ldi		r16,0x03
+		ldi		r17,0x0F
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl9a:	jmp	lvl9b
+brit9:
+		ldi		r16,0x03
+		ldi		r17,0x73
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl10a:	jmp	lvl10b
+brit10:	
+		ldi		r16,0x03
+		ldi		r17,0xD7
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl11a:	jmp	lvl11b
+brit11:	
+		ldi		r16,0x03
+		ldi		r17,0x3B
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl12a:	jmp	lvl12b
+brit12:	
+		ldi		r16,0x04
+		ldi		r17,0x9F
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl13a:	jmp	lvl13b
+brit13:	
+		ldi		r16,0x05
+		ldi		r17,0x03
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl14a:	jmp	lvl14b
+brit14:	
+		ldi		r16,0x05
+		ldi		r17,0x67
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl15a:	jmp	lvl15b
+brit15:	
+		ldi		r16,0x05
+		ldi		r17,0xCB
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl16a:	jmp	lvl16b
+brit16:	
+		ldi		r16,0x06
+		ldi		r17,0x2F
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl17a:	jmp	lvl17b
+brit17:	
+		ldi		r16,0x06
+		ldi		r17,0x93
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl18a:	jmp	lvl18b
+brit18:	
+		ldi		r16,0x07
+		ldi		r17,0x5B
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl19a:	jmp	lvl19b
+brit19:	
+		ldi		r16,0x08
+		ldi		r17,0x23
+		call	ChangeBrit
+		rjmp	Loop
 
-lvl3b:	ldi		r16,0x01	
-		ldi		r17,0x1B	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl4b:	ldi		r16,0x01	
-		ldi		r17,0x7F	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl5b:	ldi		r16,0x01	
-		ldi		r17,0xE3	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl6b:	ldi		r16,0x02	
-		ldi		r17,0x47	
+ChangeBrit:
 		sts		OCR1AH,r16
-		sts		OCR1AL,r17	
-		rjmp	Loop		
+		sts		OCR1AL,r17
+		ret
 
-lvl7b:	ldi		r16,0x02	
-		ldi		r17,0xAB	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl8b:	ldi		r16,0x03	
-		ldi		r17,0x0F	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl9b:	ldi		r16,0x03	
-		ldi		r17,0x73	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-		
-lvl10b:	ldi		r16,0x03	
-		ldi		r17,0xD7	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl11b:	ldi		r16,0x04	
-		ldi		r17,0x3B	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl12b:	ldi		r16,0x04	
-		ldi		r17,0x9F	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl13b:	ldi		r16,0x05	
-		ldi		r17,0x03	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl14b:	ldi		r16,0x05	
-		ldi		r17,0x67	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl15b:	ldi		r16,0x05	
-		ldi		r17,0xCB	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl16b:	ldi		r16,0x06	
-		ldi		r17,0x2F	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl17b:	ldi		r16,0x06	
-		ldi		r17,0x93	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl18b:	ldi		r16,0x07	
-		ldi		r17,0x5B	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-
-lvl19b:	ldi		r16,0x08	
-		ldi		r17,0x23	
-		sts		OCR1AH,r16	
-		sts		OCR1AL,r17	
-		rjmp	Loop		
-		
 		sei					
 
 ADC_Get:
